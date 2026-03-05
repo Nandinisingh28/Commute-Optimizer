@@ -1,13 +1,15 @@
-# 🎓 Smart Commute Optimizer — CHRIST University
+# 🎓Commute Optimizer — CHRIST University
 
 A real-time smart geo application built with Python and Streamlit for CHRIST University students to optimize their daily commute and find carpool partners.
+
+🌐 **Live App:** [commute-optimizer.streamlit.app](https://commute-optimizer.streamlit.app)
 
 ---
 
 ## 📦 Project Structure
 
 ```
-christ_commute_optimizer/
+Commute-Optimizer/
 │
 ├── app.py              ← Main Streamlit application
 ├── students.csv        ← Student data (auto-generated + pre-seeded)
@@ -19,13 +21,14 @@ christ_commute_optimizer/
 
 ## 🚀 How to Run Locally
 
-### Step 1 — Clone / Download the folder
+### Step 1 — Clone the repository
 
-Place all files in one folder on your machine.
+```bash
+git clone https://github.com/Nandinisingh28/Commute-Optimizer.git
+cd Commute-Optimizer
+```
 
 ### Step 2 — Install dependencies
-
-Open terminal in the project folder and run:
 
 ```bash
 pip install -r requirements.txt
@@ -41,13 +44,13 @@ The app will open at `http://localhost:8501` in your browser.
 
 ---
 
-## ☁️ Deploy to Streamlit Cloud (Free)
+## ☁️ Deployed On Streamlit Cloud
 
-1. Push this folder to a **GitHub repository**
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Click **"New App"**
-4. Select your GitHub repo and set **Main file path** to `app.py`
-5. Click **Deploy** — you'll get a public link in ~2 minutes
+This app is live and publicly accessible at:
+
+> 🔗 **[https://commute-optimizer.streamlit.app](https://commute-optimizer.streamlit.app)**
+
+Deployed via [Streamlit Community Cloud](https://share.streamlit.io) — free hosting directly from this GitHub repository.
 
 ---
 
