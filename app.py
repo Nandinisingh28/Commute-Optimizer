@@ -134,7 +134,6 @@ MODE_COLOR = {"Metro": "#1a73e8", "Bus": "#2e7d32", "Bike": "#e65100", "Car": "#
 
 
 def mode_badge(mode: str) -> str:
-    """Returns an inline HTML badge with SVG icon for a transport mode."""
     bg    = MODE_BG.get(mode, "#f5f5f5")
     color = MODE_COLOR.get(mode, "#333")
     svg   = SVG_ICONS.get(mode, "")
@@ -149,10 +148,7 @@ def mode_badge(mode: str) -> str:
 def load_data():
     if os.path.exists(DATA_FILE):
         df = pd.read_csv(DATA_FILE, dtype=str)
-        # Rename legacy USN column so old CSV files keep working
-        # Handle all legacy column name variants
         df.rename(columns={"USN": "Register No.", "Registration No.": "Register No."}, inplace=True)
-        # Re-cast coordinate columns to float
         for col in ["Lat", "Lng"]:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -220,10 +216,8 @@ df = load_data()
 st.sidebar.metric("Students Registered", len(df))
 st.sidebar.metric("Localities Covered",  df["Locality"].nunique() if len(df) > 0 else 0)
 
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 0 — HOME
-# ═══════════════════════════════════════════════════════════════════
+
 if page == "Home":
     st.title("Smart Commute Optimizer")
     st.subheader("CHRIST University, Bangalore — Student Commute Intelligence Platform")
@@ -275,10 +269,8 @@ intelligently and find carpool partners who live nearby.
     ).add_to(m)
     st_folium(m, width=700, height=350)
 
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 1 — REGISTER
-# ═══════════════════════════════════════════════════════════════════
+
 elif page == "Register My Commute":
     st.title("Register My Commute")
     st.markdown("Fill in your details to join the CHRIST Commute Network.")
@@ -325,7 +317,6 @@ elif page == "Register My Commute":
     st.markdown("### Currently Registered Students")
     df = load_data()
     if len(df):
-        # ✅ FIX: was "register_no" (wrong) — corrected to "Register No." (actual column name)
         st.dataframe(
             df[["Name", "Register No.", "Locality", "Mode", "Departure"]].reset_index(drop=True),
             use_container_width=True
@@ -333,10 +324,8 @@ elif page == "Register My Commute":
     else:
         st.info("No students registered yet. Be the first!")
 
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 2 — ROUTE VISUALIZER
-# ═══════════════════════════════════════════════════════════════════
+
 elif page == "Route Visualizer":
     st.title("Route Visualizer")
     st.markdown("Visualize any student's home-to-CHRIST route on an interactive map.")
@@ -391,7 +380,7 @@ elif page == "Route Visualizer":
                     color=color, weight=1.5, opacity=0.5
                 ).add_to(m)
 
-        elif student:
+        elif student is not None:
             lat, lng = float(student["Lat"]), float(student["Lng"])
             color    = mode_color.get(student["Mode"], "gray")
             folium.Marker(
@@ -418,7 +407,7 @@ elif page == "Route Visualizer":
 
         st_folium(m, width=700, height=480)
 
-    if student and view_mode != "View All Students":
+    if student is not None and view_mode != "View All Students":
         lat, lng               = float(student["Lat"]), float(student["Lng"])
         dist, time_min, stress = estimate_commute(lat, lng, student["Mode"])
         label, _               = stress_label(stress)
@@ -429,10 +418,8 @@ elif page == "Route Visualizer":
         c3.metric("Stress Score",  f"{stress}/100")
         c4.metric("Commute Level", label)
 
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 3 — COMMUTE ESTIMATOR
-# ═══════════════════════════════════════════════════════════════════
+
 elif page == "Commute Estimator":
     st.title("Commute Time Estimator")
     st.markdown("Compare commute times across all transport modes for any Bangalore locality.")
@@ -520,10 +507,8 @@ elif page == "Commute Estimator":
     fig3.update_xaxes(tickangle=45)
     st.plotly_chart(fig3, use_container_width=True)
 
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 4 — CARPOOL MATCHER
-# ═══════════════════════════════════════════════════════════════════
+
 elif page == "Carpool Matcher":
     st.title("Carpool Cluster Matcher")
     st.markdown("Find students near you using KMeans geographic clustering.")
@@ -666,10 +651,8 @@ elif page == "Carpool Matcher":
     ).add_to(m3)
     st_folium(m3, width=750, height=400)
 
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 5 — DASHBOARD
-# ═══════════════════════════════════════════════════════════════════
+
 elif page == "Campus Dashboard":
     st.title("Campus Commute Dashboard")
     st.markdown("Live analytics of how CHRIST students commute every day.")
